@@ -14,7 +14,7 @@ Start container
 
 docker compose up --build
 
-#Stop container
+Stop container
 
 docker compose down
 
