@@ -1,20 +1,20 @@
-1. Prepare folders on your local machine
+Prepare folders on your local machine
 
 mkdir -p ./dags ./logs ./plugins ./config
 
-2. Init airflow
+Init airflow
 
 docker compose up airflow-init
 
-3. Clear cache
+Clear cache
 
 docker compose down --volumes --remove-orphans
 
-4. Start container
+Start container
 
 docker compose up --build
 
-5. Stop container
+#Stop container
 
 docker compose down
 
