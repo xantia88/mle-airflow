@@ -1,28 +1,64 @@
-1) Prepare folders on your local machine
 
+# Установка и запуск Apache Airflow
+
+Создайте директории в рабочей папке.
+
+```
 mkdir -p ./dags ./logs ./plugins ./config
+```
 
-2) Run the following command to get an AIRFLOW_ID
+Задайте параметр ***AIRFLOW_UID*** в файле ***.env***, параметр можно получить следующей командой. Если команда возвращает значение 0, задайте параметру значение 50000. 
 
+```
 echo -e "AIRFLOW_UID=$(id -u)"
+```
 
-3) Put AIRFLOW_ID to file .env on your local machine
+Выполните инициализацию образа.
 
-4) Init airflow container
-
+```
 docker compose up airflow-init
+```
 
-5) Clear cache (recommended by vendor)
+По рекомендации разработчиков, после инициализации нужно удалить мусор.
 
+```
 docker compose down --volumes --remove-orphans
+```
 
-6) Start container
+Запустить контейнеры.
 
-docker compose up --build
+```
+docker compose up
+```
 
-7) Stop container
+# Пользовательский интерфейс
 
+Для доступа в пользовательский интерфейс используйте интернет браузер. Имя пользователя ***airflow***, пароль ***airflow***. Настройка номера порта осуществляется в файле ***docker-compose.yaml***, параметр ***ports*** сервиса ***airflow-webserver***.
+
+```
+http://127.0.0.1:8080/
+```
+
+# Дополнительные команды
+
+Для остановки всех контейнеров выполните команду ниже из рабочей папки.
+
+```
 docker compose down
+```
+
+Список запущенных контейнеров и их идентификаторы.
+
+```
+docker ps
+```
+
+Остановить контейнер по идентификатору.
+
+```
+docker stop <CID>
+```
+
 
 Access AirFlow from web browser on your local machine:
 
