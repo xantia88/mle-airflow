@@ -59,8 +59,3 @@ docker ps
 docker stop <CID>
 ```
 
-
-Access AirFlow from web browser on your local machine:
-
-http://localhost:8080
-airflow / airflow
