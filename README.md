@@ -76,7 +76,7 @@ docker images -a
 Удалить выбранный образ
 
 ```
-docker rmi <IID>
+docker rmi <UID>
 ```
 
 
