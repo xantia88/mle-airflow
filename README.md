@@ -64,7 +64,7 @@ docker stop <CID>
 Удалить выбранный контейнер
 
 ```
-docker rm <CID>
+docker rm -v <CID>
 ```
 
 Список всех образов
