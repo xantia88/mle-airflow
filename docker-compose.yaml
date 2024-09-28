@@ -63,6 +63,7 @@ x-airflow-common:
     AIRFLOW__CORE__FERNET_KEY: ''
     AIRFLOW__CORE__DAGS_ARE_PAUSED_AT_CREATION: 'true'
     AIRFLOW__CORE__LOAD_EXAMPLES: 'true'
+    AIRFLOW__CORE__TEST_CONNECTION: 'enabled'
     AIRFLOW__API__AUTH_BACKENDS: 'airflow.api.auth.backend.basic_auth,airflow.api.auth.backend.session'
     # yamllint disable rule:line-length
     # Use simple http server on scheduler for health checks
@@ -86,6 +87,23 @@ x-airflow-common:
       condition: service_healthy
 
 services:
+
+  # reverse database
+  reversedb:
+    image: postgres:13
+    environment:
+      POSTGRES_USER: reverse
+      POSTGRES_PASSWORD: reverse
+      POSTGRES_DB: reverse    
+    volumes:
+      - reverse-db-volume:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "reverse"]
+      interval: 10s
+      retries: 5
+      start_period: 5s
+    restart: always
+
   postgres:
     image: postgres:13
     environment:
@@ -298,3 +316,4 @@ services:
 
 volumes:
   postgres-db-volume:
+  reverse-db-volume:
