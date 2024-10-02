@@ -88,22 +88,6 @@ x-airflow-common:
 
 services:
 
-  # reverse database
-  reversedb:
-    image: postgres:13
-    environment:
-      POSTGRES_USER: reverse
-      POSTGRES_PASSWORD: reverse
-      POSTGRES_DB: reverse    
-    volumes:
-      - reverse-db-volume:/var/lib/postgresql/data
-    healthcheck:
-      test: ["CMD", "pg_isready", "-U", "reverse"]
-      interval: 10s
-      retries: 5
-      start_period: 5s
-    restart: always
-
   postgres:
     image: postgres:13
     environment:
@@ -147,6 +131,8 @@ services:
       <<: *airflow-common-depends-on
       airflow-init:
         condition: service_completed_successfully
+   #extra_hosts:
+   #   - dbhost:127.0.0.1
 
   airflow-scheduler:
     <<: *airflow-common
@@ -316,4 +302,4 @@ services:
 
 volumes:
   postgres-db-volume:
-  reverse-db-volume:
+  
