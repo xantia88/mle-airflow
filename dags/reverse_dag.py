@@ -2,7 +2,8 @@ import datetime
 
 from airflow.decorators import dag, task
 from airflow.operators.empty import EmptyOperator
-
+from pyVim.connect import SmartConnect
+from pyVmomi import vim, VmomiSupport
 
 @dag(start_date=datetime.datetime(2021, 1, 1), schedule="@once")
 def generate_dag():
