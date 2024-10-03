@@ -1,18 +1,23 @@
 import datetime
 
+from airflow.models import Variable
 from airflow.decorators import dag, task
-from airflow.operators.empty import EmptyOperator
-from pyVim.connect import SmartConnect
-from pyVmomi import vim, VmomiSupport
+from vmware import functions
 
 @dag(start_date=datetime.datetime(2021, 1, 1), schedule="@once")
 def generate_dag():
-    #EmptyOperator(task_id="task")
 
     @task
     def extract():
         data = {"id":1}
         print("extract",data)
+
+        functions.request()
+        vm_host = Variable.get("vmhost")
+        vm_user = Variable.get("vmuser")
+        vm_password =Variable.get("vmpassword")
+        content = functions.vsphere_connect(vm_host, vm_user, vm_password)
+
         return data
     
     @task
