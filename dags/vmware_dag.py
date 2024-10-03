@@ -5,7 +5,7 @@ from airflow.decorators import dag, task
 from vmware import functions
 
 @dag(start_date=datetime.datetime(2024, 1, 1), schedule="@once")
-def generate_dag():
+def vmware_dag():
 
     @task
     def extract():
@@ -84,4 +84,4 @@ def generate_dag():
     folder = save(objects)
     push(folder)
     
-generate_dag()
+vmware_dag()
