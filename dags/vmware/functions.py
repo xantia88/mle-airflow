@@ -18,7 +18,7 @@ def request():
         print("zzz-xxx")
 
 def vsphere_connect(host, user, pwd):
-    print("01", "connecting to", host, user, pwd)
+    print("01", "connecting to", host, user)
     connection_context = ssl.SSLContext(ssl.PROTOCOL_TLSv1_2)
     connection_context.verify_mode = ssl.CERT_NONE
     print("02", "connection prepared")
