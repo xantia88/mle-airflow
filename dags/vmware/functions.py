@@ -3,6 +3,7 @@ import requests
 from pyVim.connect import SmartConnect
 from pyVmomi import vim, VmomiSupport
 import ssl
+import yaml
 
 def request():
         print("zzz-xxx")
@@ -32,3 +33,8 @@ def vsphere_connect(host, user, pwd):
     except Exception as err:
         print(err)
     return None
+
+
+def save(object, path, filename):
+    with open("{}/{}.yaml".format(path, filename), "w", encoding="utf-8") as outfile:
+        yaml.dump(object, outfile, allow_unicode=True, encoding="utf-8", sort_keys=False)
