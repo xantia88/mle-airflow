@@ -34,7 +34,8 @@ def vsphere_connect(host, user, pwd):
         print(err)
     return None
 
-
-def save(object, path, filename):
-    with open("{}/{}.yaml".format(path, filename), "w", encoding="utf-8") as outfile:
+def save(object, path, name):
+    filename = "{}/{}.yaml".format(path, name);
+    with open(filename, "w", encoding="utf-8") as outfile:
         yaml.dump(object, outfile, allow_unicode=True, encoding="utf-8", sort_keys=False)
+    return filename

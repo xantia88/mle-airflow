@@ -69,6 +69,7 @@ def vmware_dag():
             print("save", object["type"])
         output = Variable.get("output")
         functions.save(objects, output, "architecture")
+        return output
 
     @task
     def push(folder):
