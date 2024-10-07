@@ -1,0 +1,7 @@
+{
+    "output":"/var/lib/airflow/output",
+    "vmuser":"xxx",
+    "vmpassword":"yyy",
+    "vmhost":"zzz"
+}
+
