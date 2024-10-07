@@ -5,23 +5,6 @@ from pyVmomi import vim, VmomiSupport
 import ssl
 import yaml
 
-
-def request():
-    print("zzz-xxx")
-    try:
-        print("01")
-        r = requests.get(
-            "https://iss.moex.com/iss/history/engines/stock/markets/shares/boards/TQBR/securities/SBER?from=2014-01-01&till=2014-01-31"
-        )
-        print("02")
-        print(r.status_code)
-        print("03")
-    except Exception as e:
-        print("04")
-        print(e)
-    print("zzz-xxx")
-
-
 def vsphere_connect(host, user, pwd):
     print("01", "connecting to", host, user)
     connection_context = ssl.SSLContext(ssl.PROTOCOL_TLSv1_2)

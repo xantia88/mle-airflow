@@ -10,21 +10,19 @@ def vmware_dag():
 
     @task
     def extract():
-        data = {"id": 1}
         print("extract", data)
-
-        # functions.request()
-        # vm_host = Variable.get("vmhost")
-        # vm_user = Variable.get("vmuser")
-        # vm_password =Variable.get("vmpassword")
-        # content = functions.vsphere_connect(vm_host, vm_user, vm_password)
-
-        return data
+        vm_host = Variable.get("vmhost")
+        print("vm_host", vm_host)
+        vm_user = Variable.get("vmuser")
+        print("vm_user", vm_user)
+        vm_password = Variable.get("vmpassword")
+        content = functions.vsphere_connect(vm_host, vm_user, vm_password)
+        return content
 
     @task
     def datacenters(data):
         type = "dc"
-        transformed = {"type": type}
+        transformed = {"type": type, "content": data}
         print(type, data, transformed)
         return transformed
 
@@ -72,11 +70,12 @@ def vmware_dag():
 
     @task
     def save(objects):
+        print()
+        output = Variable.get("output")
         print("save", len(objects), "objects")
         for object in objects:
             print("save", object["type"])
-        output = Variable.get("output")
-        functions.save(objects, output, "architecture")
+            functions.save(object, output, object["type"])
         return output
 
     @task
@@ -86,6 +85,7 @@ def vmware_dag():
     data = extract()
     datacenters = datacenters(data)
     objects = [
+        datacenters,
         vms(datacenters),
         vapps(datacenters),
         networks(datacenters),
