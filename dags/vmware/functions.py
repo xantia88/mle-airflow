@@ -30,4 +30,5 @@ def save(object, path, name):
         yaml.dump(
             object, outfile, allow_unicode=True, encoding="utf-8", sort_keys=False
         )
+        print("saved", filename)
     return filename
