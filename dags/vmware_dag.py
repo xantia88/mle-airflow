@@ -4,6 +4,7 @@ from airflow.models import Variable
 from airflow.decorators import dag, task
 from vmware import functions
 
+
 @dag(start_date=datetime.datetime(2024, 1, 1), schedule="@once")
 def vmware_dag():
 
