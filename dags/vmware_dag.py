@@ -10,21 +10,15 @@ def vmware_dag():
 
     @task
     def extract():
-        print("extract", data)
         vm_host = Variable.get("vmhost")
-        print("vm_host", vm_host)
         vm_user = Variable.get("vmuser")
-        print("vm_user", vm_user)
         vm_password = Variable.get("vmpassword")
         content = functions.vsphere_connect(vm_host, vm_user, vm_password)
-        return content
+        return functions.get_all_datacenters(content)
 
     @task
     def datacenters(data):
-        type = "dc"
-        transformed = {"type": type, "content": data}
-        print(type, data, transformed)
-        return transformed
+        return functions.get_datacenters(data)
 
     @task
     def vms(data):
