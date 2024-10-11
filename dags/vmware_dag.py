@@ -28,8 +28,7 @@ def vmware_dag():
     def vms():
         export_path = get_export_path()
         content = connect()
-        dcs = vcenter.get_datacenters(content)
-        for dc in dcs:
+        for dc in vcenter.get_datacenters(content):
             vms = vcenter.get_vms(content, dc)
             functions.export_vms(vcenter.json(vms), dc, export_path)
 
@@ -57,17 +56,17 @@ def vmware_dag():
     def push():
         pass
 
-    t_dcs = datacenters()
-    t_vms = vms()
-    t_vapps = vapps()
-    t_networks = networks()
-    t_dvswitch = dvswitch()
-    t_dvportgroup = dvportgroup()
-    t_hosts = hosts()
-    t_push = push()
+    dcs = datacenters()
+    vms = vms()
+    vapps = vapps()
+    networks = networks()
+    dvswitch = dvswitch()
+    dvportgroup = dvportgroup()
+    hosts = hosts()
+    push = push()
 
-    t_dcs >> [t_vms, t_vapps, t_networks,
-              t_dvswitch, t_dvportgroup, t_hosts] >> t_push
+    dcs >> [vms, vapps, networks,
+            dvswitch, dvportgroup, hosts] >> push
 
 
 vmware_dag()
