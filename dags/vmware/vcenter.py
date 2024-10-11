@@ -13,12 +13,43 @@ def connect(host, user, pwd):
     return content
 
 
-def get_datacenters(content):
+def get_dcs(content):
     return get_all_objs(content, [vim.Datacenter])
 
 
 def get_vms(content, dc):
     return get_all_objs(content, [vim.VirtualMachine], dc)
+
+
+def get_vapps(content, dc):
+    return get_all_objs(content, [vim.VirtualApp], dc)
+
+
+def get_networks(content, dc):
+    return get_all_objs(content, [vim.Network], dc)
+
+
+def get_dvswitches(content, dc):
+    return get_all_objs(content, [vim.DistributedVirtualSwitch], dc)
+
+
+def get_dvpgroups(content, dc):
+    return get_all_objs(content, [vim.dvs.DistributedVirtualPortgroup], dc)
+
+
+def getVlans(pg):
+    vlan_info = pg.config.defaultPortConfig.vlan
+    vlan_spec = vim.dvs.VmwareDistributedVirtualSwitch.TrunkVlanSpec
+    if isinstance(vlan_info, vlan_spec):
+        vlanlist = []
+        for item in vlan_info.vlanId:
+            if item.start == item.end:
+                vlanlist.append(str(item.start))
+            else:
+                vlanlist.append(str(item.start)+' - '+str(item.end))
+        return vlanlist
+    else:
+        return [str(vlan_info.vlanId)]
 
 
 def get_all_objs(content, vimtype, folder=None):

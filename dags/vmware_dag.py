@@ -20,33 +20,52 @@ def vmware_dag():
     @task
     def datacenters():
         content = connect()
-        dcs = vcenter.get_datacenters(content)
+        dcs = vcenter.get_dcs(content)
         dcs_json = vcenter.json(dcs)
-        functions.export_datacenters(dcs_json, get_export_path())
+        functions.export_dcs(dcs_json, get_export_path())
 
     @task
     def vms():
         export_path = get_export_path()
         content = connect()
-        for dc in vcenter.get_datacenters(content):
+        for dc in vcenter.get_dcs(content):
             vms = vcenter.get_vms(content, dc)
             functions.export_vms(vcenter.json(vms), dc, export_path)
 
     @task
     def vapps():
-        pass
+        export_path = get_export_path()
+        content = connect()
+        for dc in vcenter.get_dcs(content):
+            vapps = vcenter.get_vapps(content, dc)
+            functions.export_vapps(vcenter.json(vapps), dc, export_path)
 
     @task
     def networks():
-        pass
+        export_path = get_export_path()
+        content = connect()
+        for dc in vcenter.get_dcs(content):
+            networks = vcenter.get_networks(content, dc)
+            functions.export_networks(vcenter.json(networks), dc, export_path)
 
     @task
-    def dvswitch():
-        pass
+    def dvswitches():
+        export_path = get_export_path()
+        content = connect()
+        for dc in vcenter.get_dcs(content):
+            dvss = vcenter.get_dvswitches(content, dc)
+            functions.export_dvswitches(vcenter.json(dvss), dc, export_path)
 
     @task
-    def dvportgroup():
-        pass
+    def dvpgroups():
+        export_path = get_export_path()
+        content = connect()
+        for dc in vcenter.get_dcs(content):
+            dvpgs = []
+            for pg in vcenter.get_dvpgroups(content, dc):
+                json_pg = vcenter.convert_to_json(pg)
+                json_pg["vlan_id"] = vcenter.getVlans(pg)
+            functions.export_dvpgroups(dvpgs, dc, export_path)
 
     @task
     def hosts():
@@ -60,13 +79,13 @@ def vmware_dag():
     vms = vms()
     vapps = vapps()
     networks = networks()
-    dvswitch = dvswitch()
-    dvportgroup = dvportgroup()
+    dvswitches = dvswitches()
+    dvpgroups = dvpgroups()
     hosts = hosts()
     push = push()
 
     dcs >> [vms, vapps, networks,
-            dvswitch, dvportgroup, hosts] >> push
+            dvswitches, dvpgroups, hosts] >> push
 
 
 vmware_dag()
