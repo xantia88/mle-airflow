@@ -65,6 +65,7 @@ def vmware_dag():
             for pg in vcenter.get_dvpgroups(content, dc):
                 json_pg = vcenter.convert_to_json(pg)
                 json_pg["vlan_id"] = vcenter.getVlans(pg)
+                dvpgs.append(json_pg)
             functions.export_dvpgroups(dvpgs, dc, export_path)
 
     @task
