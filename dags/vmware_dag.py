@@ -8,17 +8,16 @@ from vmware import functions
 @dag(start_date=datetime.datetime(2024, 1, 1), schedule="@once")
 def vmware_dag():
 
-    @task
-    def extract():
+    def get_content():
         vm_host = Variable.get("vmhost")
         vm_user = Variable.get("vmuser")
         vm_password = Variable.get("vmpassword")
-        content = functions.vsphere_connect(vm_host, vm_user, vm_password)
-        return functions.get_all_datacenters(content)
+        return functions.vsphere_connect(vm_host, vm_user, vm_password)
 
     @task
-    def datacenters(data):
-        return functions.get_datacenters(data)
+    def datacenters():
+        content = get_content()
+        return functions.get_datacenters(content)
 
     @task
     def vms(data):
@@ -76,8 +75,7 @@ def vmware_dag():
     def push(folder):
         print("push to git", folder)
 
-    data = extract()
-    datacenters = datacenters(data)
+    datacenters = datacenters()
     objects = [
         datacenters,
         vms(datacenters),

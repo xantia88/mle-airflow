@@ -18,11 +18,8 @@ def get_all_objs(content, vimtype, folder=None):
     return obj
 
 
-def get_all_datacenters(content):
-    return get_all_objs(content, [vim.Datacenter])
-
-
-def get_datacenters(getAllDCs):
+def get_datacenters(content):
+    getAllDCs = get_all_objs(content, [vim.Datacenter])
     alldcs_json = {"seaf.ta.reverse.vmwareonprem.vdcs": {}}
     alldcs_list = []
     for dc in getAllDCs:
