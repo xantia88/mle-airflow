@@ -2,91 +2,72 @@ import datetime
 
 from airflow.models import Variable
 from airflow.decorators import dag, task
-from vmware import functions
+from vmware import functions, vcenter
 
 
 @dag(start_date=datetime.datetime(2024, 1, 1), schedule="@once")
 def vmware_dag():
 
-    def get_content():
+    def get_export_path():
+        return Variable.get("output")
+
+    def connect():
         vm_host = Variable.get("vmhost")
         vm_user = Variable.get("vmuser")
         vm_password = Variable.get("vmpassword")
-        return functions.vsphere_connect(vm_host, vm_user, vm_password)
+        return vcenter.connect(vm_host, vm_user, vm_password)
 
     @task
     def datacenters():
-        content = get_content()
-        return functions.get_datacenters(content)
+        content = connect()
+        dcs = vcenter.get_datacenters(content)
+        dcs_json = vcenter.json(dcs)
+        functions.export_datacenters(dcs_json, get_export_path())
 
     @task
-    def vms(data):
-        type = "vms"
-        transformed = {"type": type}
-        print(type, data, transformed)
-        return transformed
+    def vms():
+        export_path = get_export_path()
+        content = connect()
+        dcs = vcenter.get_datacenters(content)
+        for dc in dcs:
+            vms = vcenter.get_vms(content, dc)
+            functions.export_vms(vcenter.json(vms), dc, export_path)
 
     @task
-    def vapps(data):
-        type = "vapps"
-        transformed = {"type": type}
-        print(type, data, transformed)
-        return transformed
+    def vapps():
+        pass
 
     @task
-    def networks(data):
-        type = "networks"
-        transformed = {"type": type}
-        print(type, data, transformed)
-        return transformed
+    def networks():
+        pass
 
     @task
-    def dvswitch(data):
-        type = "dswitch"
-        transformed = {"type": type}
-        print(type, data, transformed)
-        return transformed
+    def dvswitch():
+        pass
 
     @task
-    def dvportgroup(data):
-        type = "dvportgroup"
-        transformed = {"type": type}
-        print(type, data, transformed)
-        return transformed
+    def dvportgroup():
+        pass
 
     @task
-    def hosts(data):
-        type = "hosts"
-        transformed = {"type": type}
-        print(type, data, transformed)
-        return transformed
+    def hosts():
+        pass
 
     @task
-    def save(objects):
-        print()
-        output = Variable.get("output")
-        print("save", len(objects), "objects")
-        for object in objects:
-            print("save", object["type"])
-            functions.save(object, output, object["type"])
-        return output
+    def push():
+        pass
 
-    @task
-    def push(folder):
-        print("push to git", folder)
+    t_dcs = datacenters()
+    t_vms = vms()
+    t_vapps = vapps()
+    t_networks = networks()
+    t_dvswitch = dvswitch()
+    t_dvportgroup = dvportgroup()
+    t_hosts = hosts()
+    t_push = push()
 
-    datacenters = datacenters()
-    objects = [
-        datacenters,
-        vms(datacenters),
-        vapps(datacenters),
-        networks(datacenters),
-        dvswitch(datacenters),
-        dvportgroup(datacenters),
-        hosts(datacenters),
-    ]
-    folder = save(objects)
-    push(folder)
+    t_dcs >> [t_vms, t_vapps, t_networks,
+              t_dvswitch, t_dvportgroup, t_hosts] >> t_push
 
 
 vmware_dag()
