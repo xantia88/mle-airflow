@@ -2,10 +2,11 @@ import yaml
 from typing import Iterable
 
 
-def export_dcs(dcs, exportpath):
+def export_dcs(dcs, config):
 
-    prefix = ""
-    location = ""
+    prefix = config["prefix"]
+    location = config["location"]
+    exportpath = config["output"]
 
     alldcs_json = {"seaf.ta.reverse.vmwareonprem.vdcs": {}}
     for json_dc in dcs:
@@ -24,9 +25,10 @@ def export_dcs(dcs, exportpath):
     save(alldcs_json, exportpath, "dcs")
 
 
-def export_vms(vms, dc, exportpath):
+def export_vms(vms, dc, config):
 
-    prefix = ""
+    prefix = config["prefix"]
+    exportpath = config["output"]
 
     allvms_json = {"seaf.ta.components.server": {}}
     for json_vm in vms:
@@ -83,9 +85,10 @@ def export_vms(vms, dc, exportpath):
     save(allvms_json, exportpath, get_file_name("vms", dc))
 
 
-def export_vapps(vapps, dc, exportpath):
+def export_vapps(vapps, dc, config):
 
-    prefix = ""
+    prefix = config["prefix"]
+    exportpath = config["output"]
 
     allvapps_json = {"seaf.ta.reverse.vmwareonprem.vapps": {}}
     for json_vapp in vapps:
@@ -107,10 +110,11 @@ def export_vapps(vapps, dc, exportpath):
     save(vapps, exportpath, "vapps_")
 
 
-def export_networks(networks, dc, exportpath):
+def export_networks(networks, dc, config):
 
-    prefix = ""
-    location = ""
+    prefix = config["prefix"]
+    location = config["location"]
+    exportpath = config["output"]
 
     allnetworks_json = {"seaf.ta.services.network": {}}
     for json_network in networks:
@@ -139,10 +143,11 @@ def export_networks(networks, dc, exportpath):
     save(networks, exportpath, "networks")
 
 
-def export_dvswitches(dvss, dc, exportpath):
+def export_dvswitches(dvss, dc, config):
 
-    prefix = ""
-    location = ""
+    prefix = config["prefix"]
+    location = config["location"]
+    exportpath = config["output"]
 
     alldvswitches_json = {"seaf.ta.components.network": {}}
     for json_switch in dvss:
@@ -171,9 +176,10 @@ def export_dvswitches(dvss, dc, exportpath):
     save(dvss, exportpath, "dvswitches")
 
 
-def export_dvpgroups(dvpgs, dc, exportpath):
+def export_dvpgroups(dvpgs, dc, config):
 
-    prefix = ""
+    prefix = config["prefix"]
+    exportpath = config["output"]
 
     alldvportgroups_json = {"seaf.ta.reverse.vmwareonprem.dvportgroups": {}}
     for json_pg in dvpgs:
@@ -197,6 +203,10 @@ def export_dvpgroups(dvpgs, dc, exportpath):
     save(dvpgs, exportpath, "dvportgroups")
 
 
+def get_file_name(title, dc):
+    return "{}_{}".format(title, dc.get("_moId"))
+
+
 def save(object, path, name):
     filename = "{}/{}.yaml".format(path, name)
     with open(filename, "w", encoding="utf-8") as outfile:
@@ -213,7 +223,3 @@ def flatten(items):
                 yield sub_x
         else:
             yield x
-
-
-def get_file_name(title, dc):
-    return "{}_{}".format(title, dc.get("_moId"))

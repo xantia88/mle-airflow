@@ -8,65 +8,70 @@ from vmware import functions, vcenter
 @dag(start_date=datetime.datetime(2024, 1, 1), schedule="@once")
 def vmware_dag():
 
-    def get_export_path():
-        return Variable.get("output")
-
     def connect():
         vm_host = Variable.get("vmhost")
         vm_user = Variable.get("vmuser")
         vm_password = Variable.get("vmpassword")
         return vcenter.connect(vm_host, vm_user, vm_password)
 
+    def get_config():
+        return {
+            "prefix": Variable.get("prefix", default_var=""),
+            "location": Variable.get("location", default_var=""),
+            "output": Variable.get("output")
+        }
+
     @task
     def datacenters():
+        config = get_config()
         content = connect()
         dcs = vcenter.get_dcs(content)
         json_dcs = vcenter.json(dcs)
-        functions.export_dcs(json_dcs, get_export_path())
+        functions.export_dcs(json_dcs, config)
 
     @task
     def vms():
-        export_path = get_export_path()
+        config = get_config()
         content = connect()
         for dc in vcenter.get_dcs(content):
             vms = vcenter.get_vms(content, dc)
             json_vms = vcenter.json(vms),
             json_dc = vcenter.convert_to_json(dc)
-            functions.export_vms(json_vms, json_dc, export_path)
+            functions.export_vms(json_vms, json_dc, config)
 
     @task
     def vapps():
-        export_path = get_export_path()
+        config = get_config()
         content = connect()
         for dc in vcenter.get_dcs(content):
             vapps = vcenter.get_vapps(content, dc)
             json_vapps = vcenter.json(vapps)
             json_dc = vcenter.convert_to_json(dc)
-            functions.export_vapps(json_vapps, json_dc, export_path)
+            functions.export_vapps(json_vapps, json_dc, config)
 
     @task
     def networks():
-        export_path = get_export_path()
+        config = get_config()
         content = connect()
         for dc in vcenter.get_dcs(content):
             networks = vcenter.get_networks(content, dc)
             json_networks = vcenter.json(networks)
             json_dc = vcenter.convert_to_json(dc)
-            functions.export_networks(json_networks, json_dc, export_path)
+            functions.export_networks(json_networks, json_dc, config)
 
     @task
     def dvswitches():
-        export_path = get_export_path()
+        config = get_config()
         content = connect()
         for dc in vcenter.get_dcs(content):
             dvss = vcenter.get_dvswitches(content, dc)
             json_dvss = vcenter.json(dvss)
             json_dc = vcenter.convert_to_json(dc)
-            functions.export_dvswitches(json_dvss, json_dc, export_path)
+            functions.export_dvswitches(json_dvss, json_dc, config)
 
     @task
     def dvpgroups():
-        export_path = get_export_path()
+        config = get_config()
         content = connect()
         for dc in vcenter.get_dcs(content):
             dvpgs = []
@@ -75,7 +80,7 @@ def vmware_dag():
                 json_pg["vlan_id"] = vcenter.get_vlans(pg)
                 dvpgs.append(json_pg)
             json_dc = vcenter.convert_to_json(dc)
-            functions.export_dvpgroups(dvpgs, json_dc, export_path)
+            functions.export_dvpgroups(dvpgs, json_dc, config)
 
     @task
     def hosts():
