@@ -37,7 +37,7 @@ def get_dvpgroups(content, dc):
     return get_all_objs(content, [vim.dvs.DistributedVirtualPortgroup], dc)
 
 
-def getVlans(pg):
+def get_vlans(pg):
     vlan_info = pg.config.defaultPortConfig.vlan
     vlan_spec = vim.dvs.VmwareDistributedVirtualSwitch.TrunkVlanSpec
     if isinstance(vlan_info, vlan_spec):
