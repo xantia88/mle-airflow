@@ -9,8 +9,10 @@ def export_dcs(dcs, exportpath):
 
     alldcs_json = {"seaf.ta.reverse.vmwareonprem.vdcs": {}}
     for json_dc in dcs:
+
         dc_id = prefix + "vdcs." + json_dc.get("_vimid")
-        alldcs_json["seaf.ta.reverse.vmwareonprem.vdcs"][f"{dc_id}"] = {
+
+        alldcs_json["seaf.ta.reverse.vmwareonprem.vdcs"][dc_id] = {
             "id": json_dc.get("_vimid"),
             "original_id": json_dc.get("_vimref"),
             "title": json_dc.get("name"),
@@ -34,7 +36,7 @@ def export_vms(vms, dc, exportpath):
         vapp_id = [f"{prefix}vapps.{x.split(':')[-1]}" if not (
             x in {None, "", "null"}) else '' for x in json_vm.get("parentVApp", "") or []]
 
-        allvms_json["seaf.ta.components.server"][f"{vm_id}"] = {
+        allvms_json["seaf.ta.components.server"][vm_id] = {
             'id': json_vm.get("_vimid"),
             'type': 'Виртуальный',
             'title': json_vm.get("name"),
@@ -76,7 +78,7 @@ def export_vms(vms, dc, exportpath):
                 'size': int(disk.get("capacityInKB")/1024/1024)
             }})
 
-        allvms_json["seaf.ta.components.server"][f"{vm_id}"]['disks'] = disks
+        allvms_json["seaf.ta.components.server"][vm_id]['disks'] = disks
 
     save(allvms_json, exportpath, get_file_name("vms", dc))
 
@@ -91,7 +93,7 @@ def export_vapps(vapps, dc, exportpath):
         vapp_id = prefix + "vapps." + json_vapp.get("_vimid")
         dc_id = prefix + "vdcs." + dc.get("_moId")
 
-        allvapps_json["seaf.ta.reverse.vmwareonprem.vapps"][f"{vapp_id}"] = {
+        allvapps_json["seaf.ta.reverse.vmwareonprem.vapps"][vapp_id] = {
             'id': json_vapp.get("_vimid"),
             'original_id': json_vapp.get("_vimref"),
             'title': json_vapp.get("name"),
@@ -116,7 +118,7 @@ def export_networks(networks, dc, exportpath):
         network_id = prefix + "network." + json_network.get("_vimid")
         dc_id = prefix + "vdcs." + dc.get("_moId")
 
-        allnetworks_json["seaf.ta.services.network"][f"{network_id}"] = {
+        allnetworks_json["seaf.ta.services.network"][network_id] = {
             'id': json_network.get("_vimid"),
             'original_id': json_network.get("_vimref"),
             'title': json_network.get("name"),
@@ -148,7 +150,7 @@ def export_dvswitches(dvss, dc, exportpath):
         switch_id = prefix + "network." + json_switch.get("_vimid")
         dc_id = prefix + "vdcs." + dc.get("_moId")
 
-        alldvswitches_json["seaf.ta.components.network"][f"{switch_id}"] = {
+        alldvswitches_json["seaf.ta.components.network"][switch_id] = {
             'id': json_switch.get("_vimid"),
             'title': json_switch.get("name"),
             'description': '',
@@ -179,7 +181,7 @@ def export_dvpgroups(dvpgs, dc, exportpath):
         id = prefix + "dvportgroups." + json_pg.get("_vimid")
         dc_id = prefix + "vdc." + dc.get("_moId")
 
-        alldvportgroups_json["seaf.ta.reverse.vmwareonprem.dvportgroups"][f"{id}"] = {
+        alldvportgroups_json["seaf.ta.reverse.vmwareonprem.dvportgroups"][id] = {
             'id': json_pg.get("_vimid"),
             'original_id': json_pg.get("_vimref"),
             'title': json_pg.get("name"),
