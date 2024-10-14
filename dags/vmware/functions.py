@@ -107,7 +107,6 @@ def export_vapps(vapps, dc, config):
         }
 
     save(allvapps_json, exportpath, get_file_name("vapps", dc))
-    save(vapps, exportpath, "vapps_")
 
 
 def export_networks(networks, dc, config):
@@ -140,7 +139,6 @@ def export_networks(networks, dc, config):
         }
 
     save(allnetworks_json, exportpath, get_file_name("networks", dc))
-    save(networks, exportpath, "networks")
 
 
 def export_dvswitches(dvss, dc, config):
@@ -173,7 +171,6 @@ def export_dvswitches(dvss, dc, config):
         }
 
     save(alldvswitches_json, exportpath, get_file_name("dvswitches", dc))
-    save(dvss, exportpath, "dvswitches")
 
 
 def export_dvpgroups(dvpgs, dc, config):
@@ -200,7 +197,6 @@ def export_dvpgroups(dvpgs, dc, config):
         }
 
     save(alldvportgroups_json, exportpath, get_file_name("dvportgroups", dc))
-    save(dvpgs, exportpath, "dvportgroups")
 
 
 def get_file_name(title, dc):

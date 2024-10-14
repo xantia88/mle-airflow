@@ -63,8 +63,15 @@ def get_all_objs(content, vimtype, folder=None):
     return obj
 
 
-def json(objects):
-    return [convert_to_json(object) for object in objects]
+def jsons(objects):
+    json_objects = []
+    for obj in objects:
+        try:
+            json_obj = convert_to_json(obj)
+            json_objects.append(json_obj)
+        except Exception as e:
+            print(e)
+    return json_objects
 
 
 def convert_to_json(obj):

@@ -26,7 +26,7 @@ def vmware_dag():
         config = get_config()
         content = connect()
         dcs = vcenter.get_dcs(content)
-        json_dcs = vcenter.json(dcs)
+        json_dcs = vcenter.jsons(dcs)
         functions.export_dcs(json_dcs, config)
 
     @task
@@ -35,7 +35,7 @@ def vmware_dag():
         content = connect()
         for dc in vcenter.get_dcs(content):
             vms = vcenter.get_vms(content, dc)
-            json_vms = vcenter.json(vms),
+            json_vms = vcenter.jsons(vms),
             json_dc = vcenter.convert_to_json(dc)
             functions.export_vms(json_vms, json_dc, config)
 
@@ -45,7 +45,7 @@ def vmware_dag():
         content = connect()
         for dc in vcenter.get_dcs(content):
             vapps = vcenter.get_vapps(content, dc)
-            json_vapps = vcenter.json(vapps)
+            json_vapps = vcenter.jsons(vapps)
             json_dc = vcenter.convert_to_json(dc)
             functions.export_vapps(json_vapps, json_dc, config)
 
@@ -55,7 +55,7 @@ def vmware_dag():
         content = connect()
         for dc in vcenter.get_dcs(content):
             networks = vcenter.get_networks(content, dc)
-            json_networks = vcenter.json(networks)
+            json_networks = vcenter.jsons(networks)
             json_dc = vcenter.convert_to_json(dc)
             functions.export_networks(json_networks, json_dc, config)
 
@@ -65,7 +65,7 @@ def vmware_dag():
         content = connect()
         for dc in vcenter.get_dcs(content):
             dvss = vcenter.get_dvswitches(content, dc)
-            json_dvss = vcenter.json(dvss)
+            json_dvss = vcenter.jsons(dvss)
             json_dc = vcenter.convert_to_json(dc)
             functions.export_dvswitches(json_dvss, json_dc, config)
 
