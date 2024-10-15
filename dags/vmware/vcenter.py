@@ -63,7 +63,7 @@ def get_all_objs(content, vimtype, folder=None):
     return obj
 
 
-def jsons(objects):
+def get_jsons(objects):
     json_objects = []
     for obj in objects:
         try:
@@ -76,3 +76,16 @@ def jsons(objects):
 
 def convert_to_json(obj):
     return json.loads(json.dumps(obj, cls=VmomiSupport.VmomiJSONEncoder))
+
+
+def get_dc_json(dc):
+    return {
+        "_moId": dc._moId,
+        "name": dc.name
+    }
+
+
+def get_pg_json(pg):
+    json_pg = convert_to_json(pg)
+    json_pg["vlan_id"] = get_vlans(pg)
+    return pg
