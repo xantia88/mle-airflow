@@ -27,8 +27,6 @@ def export_dcs(dcs, config):
 
 def export_vms(vms, dc, config):
 
-    print("dc", dc)
-
     prefix = config["prefix"]
     exportpath = config["output"]
 

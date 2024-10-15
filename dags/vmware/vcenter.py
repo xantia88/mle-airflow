@@ -88,4 +88,4 @@ def get_dc_json(dc):
 def get_pg_json(pg):
     json_pg = convert_to_json(pg)
     json_pg["vlan_id"] = get_vlans(pg)
-    return pg
+    return json_pg
