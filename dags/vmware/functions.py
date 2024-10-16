@@ -199,6 +199,144 @@ def export_dvpgroups(dvpgs, dc, config):
     save(alldvportgroups_json, exportpath, get_file_name("dvportgroups", dc))
 
 
+def get_hosts(hosts, dc, config):
+
+    prefix = config["prefix"]
+    location = config["location"]
+    exportpath = config["output"]
+
+    allhosts_json = {"seaf.ta.reverse.vmwareonprem.hosts": {}}
+
+    for vchost in hosts:
+
+        # REFACTORING NEEDED !!!!! (split funtion)
+        def get_hostnetwork(host_config):
+
+            # Physical Nics
+            host_pnics = []
+            for pnic in host_config.get("network", "").get("pnic", ""):
+                pnic_info = dict()
+                pnic_info.update(
+                    {
+                        pnic.get("key"): {
+                            'device': pnic.get("device", ""),
+                            'driver': pnic.get("driver", ""),
+                            'mac': pnic.get("mac", "")
+                        }
+                    }
+                )
+                host_pnics.append(pnic_info)
+
+            # Virtual Nics
+            host_vnics = []
+            for vnic in host_config.get("network", "").get("vnic", ""):
+                vnic_info = dict()
+                vnic_info.update(
+                    {
+                        vnic.get("key"): {
+                            'device': vnic.get("device", ""),
+                            'portgroup': vnic.get("portgroup", ""),
+                            'port': vnic.get("port", ""),
+                            'dhcp': vnic.get("spec", "").get("ip", "").get("dhcp", ""),
+                            'ipAddress': vnic.get("spec", "").get("ip", "").get("ipAddress", ""),
+                            'subnetMask': vnic.get("spec", "").get("ip", "").get("subnetMask", ""),
+                            'mac': vnic.get("spec", "").get("mac", ""),
+                            'mtu': vnic.get("spec", "").get("mtu", "")
+                        }
+                    }
+                )
+                host_vnics.append(vnic_info)
+
+            # Virtual Switches
+            host_vswitches = []
+            for vswitch in host_config.get("network", "").get("vswitch", ""):
+                vswitch_info = dict()
+                vswitch_pnics = []
+                vswitch_portgroups = []
+                for pnic in vswitch.get("pnic"):
+                    vswitch_pnics.append(pnic)
+                for pg in vswitch.get("portgroup"):
+                    vswitch_portgroups.append(pg)
+                vswitch_info.update(
+                    {
+                        vswitch.get("key", ""): {
+                            'name': vswitch.get("name"),
+                            'pnics': vswitch_pnics,
+                            'portgroups': vswitch_portgroups,
+                            'mtu': vswitch.get("mtu", "")
+                        }
+                    }
+                )
+                host_vswitches.append(vswitch_info)
+
+            # Port Groups
+            host_portgroups = []
+            for portgroup in host_config.get("network", "").get("portgroup", ""):
+
+                portgroup_info = dict()
+                nicteamingplc = ""
+                if 'nicTeaming' in portgroup.get("spec", "").get("policy", ""):
+                    # print(portgroup.get("spec","").get("policy",""))
+                    if portgroup.get("spec", "").get("policy", "").get("nicTeaming", "") != None:
+                        nicteamingplc = portgroup.get("spec", "").get(
+                            "policy", "").get("nicTeaming", "").get("policy", "")
+                else:
+                    nicteamingplc = None
+
+                if portgroup.get("spec", "").get("policy", "").get("security", "") != None:
+                    securitypolicy = portgroup.get("spec", "").get(
+                        "policy", "").get("security", "")
+                else:
+                    securitypolicy = dict()
+
+                portgroup_info.update(
+                    {
+                        portgroup.get("key", ""): {
+                            'name': portgroup.get("spec", "").get("name", ""),
+                            'vlanId': portgroup.get("spec", "").get("vlanId", ""),
+                            'vswitchName': portgroup.get("spec", "").get("vswitchName", ""),
+                            'vswitch_id': portgroup.get("vswitch", ""),
+                            'nicTeamingPolicy': nicteamingplc,
+                            'allowPromiscuous': securitypolicy.get("allowPromiscuous", ""),
+                            'macChanges': securitypolicy.get("macChanges", ""),
+                            'forgedTransmits': securitypolicy.get("forgedTransmits", "")
+                        }
+                    }
+                )
+                host_portgroups.append(portgroup_info)
+
+            return {
+                "pnics": host_pnics,
+                "vnics": host_vnics,
+                "vswitches": host_vswitches,
+                "pgs": host_portgroups
+            }
+
+        json_config = vchost.get("config")
+
+        id = prefix + 'hosts.' + vchost.get("_moId")
+        dc_id = prefix + 'vdcs.' + dc.get("_moId")
+
+        allhosts_json["seaf.ta.reverse.vmwareonprem.hosts"][id] = {
+            'id': vchost.get("_moId"),
+            'original_id': vchost.get("original_id"),
+            'title': vchost.get("name"),
+            'description': '',
+            'product': {
+                "name": json_config.get("product", "").get("name", ""),
+                "version": json_config.get("product", "").get("version", ""),
+                "build": json_config.get("product", "").get("build", ""),
+                "fullname": json_config.get("product", "").get("fullname", "")
+            },
+            'network': get_hostnetwork(json_config),
+            'vdc': dc_id,
+            'vdc_title': dc.get("name"),
+            'dc': location
+        }
+
+    save(allhosts_json, exportpath, get_file_name("hosts", dc))
+
+
 def get_file_name(title, dc):
     return "{}_{}".format(title, dc.get("_moId"))
 

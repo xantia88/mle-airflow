@@ -37,6 +37,10 @@ def get_dvpgroups(content, dc):
     return get_all_objs(content, [vim.dvs.DistributedVirtualPortgroup], dc)
 
 
+def get_hosts(content, dc):
+    return get_all_objs(content, [vim.HostSystem], dc)
+
+
 def get_vlans(pg):
     vlan_info = pg.config.defaultPortConfig.vlan
     vlan_spec = vim.dvs.VmwareDistributedVirtualSwitch.TrunkVlanSpec
@@ -82,6 +86,15 @@ def get_dc_json(dc):
     return {
         "_moId": dc._moId,
         "name": dc.name
+    }
+
+
+def get_host_json(vchost):
+    return {
+        "config": convert_to_json(vchost.config),
+        "_moId": vchost._moId,
+        "name": vchost.name,
+        "original_id": vchost.__class__.__name__ + vchost._moId
     }
 
 
