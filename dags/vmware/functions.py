@@ -11,7 +11,7 @@ def export_dcs(dcs, config):
     alldcs_json = {"seaf.ta.reverse.vmwareonprem.vdcs": {}}
     for json_dc in dcs:
 
-        dc_id = prefix + "vdcs." + json_dc.get("_vimid")
+        dc_id = get_id(prefix, "vdcs", json_dc.get("_vimid"))
 
         alldcs_json["seaf.ta.reverse.vmwareonprem.vdcs"][dc_id] = {
             "id": json_dc.get("_vimid"),
@@ -33,8 +33,7 @@ def export_vms(vms, dc, config):
     allvms_json = {"seaf.ta.components.server": {}}
     for json_vm in vms:
 
-        vm_id = prefix + "server." + json_vm.get("_vimid")
-        dc_id = prefix + "vdcs." + dc.get("_moId")
+        vm_id = get_id(prefix, "server", json_vm.get("_vimid"))
         vapp_id = [f"{prefix}vapps.{x.split(':')[-1]}" if not (
             x in {None, "", "null"}) else '' for x in json_vm.get("parentVApp", "") or []]
 
@@ -63,7 +62,7 @@ def export_vms(vms, dc, config):
                 'subnet_titles': list(flatten([x.get("network") for x in json_vm.get("guest").get("net")])),
                 'tags': [],
                 'vapp': vapp_id,
-                'vdc': dc_id,
+                'vdc': get_dc_id(prefix, "vdcs", dc),
                 'vdc_title': dc.get("name")
             }
         }
@@ -93,8 +92,7 @@ def export_vapps(vapps, dc, config):
     allvapps_json = {"seaf.ta.reverse.vmwareonprem.vapps": {}}
     for json_vapp in vapps:
 
-        vapp_id = prefix + "vapps." + json_vapp.get("_vimid")
-        dc_id = prefix + "vdcs." + dc.get("_moId")
+        vapp_id = get_id(prefix, "vapps", json_vapp.get("_vimid"))
 
         allvapps_json["seaf.ta.reverse.vmwareonprem.vapps"][vapp_id] = {
             'id': json_vapp.get("_vimid"),
@@ -102,7 +100,7 @@ def export_vapps(vapps, dc, config):
             'title': json_vapp.get("name"),
             'description': json_vapp.get("config").get("annotation"),
             'tags': [],
-            'vdc': dc_id,
+            'vdc': get_dc_id(prefix, "vdc", dc),
             'vdc_tile': dc.get("name")
         }
 
@@ -118,8 +116,7 @@ def export_networks(networks, dc, config):
     allnetworks_json = {"seaf.ta.services.network": {}}
     for json_network in networks:
 
-        network_id = prefix + "network." + json_network.get("_vimid")
-        dc_id = prefix + "vdcs." + dc.get("_moId")
+        network_id = get_id(prefix, "network", json_network.get("_vimid"))
 
         allnetworks_json["seaf.ta.services.network"][network_id] = {
             'id': json_network.get("_vimid"),
@@ -132,7 +129,7 @@ def export_networks(networks, dc, config):
             'reverse': {
                 'type': 'vmwarenetwork',
                 'reverse_type': 'VMwareOnprem',
-                'vdc': dc_id,
+                'vdc': get_dc_id(prefix, "vdc", dc),
                 'vdc_title': dc.get("name")
             },
             'dc_id': [location]
@@ -150,8 +147,7 @@ def export_dvswitches(dvss, dc, config):
     alldvswitches_json = {"seaf.ta.components.network": {}}
     for json_switch in dvss:
 
-        switch_id = prefix + "network." + json_switch.get("_vimid")
-        dc_id = prefix + "vdcs." + dc.get("_moId")
+        switch_id = get_id(prefix, "network", json_switch.get("_vimid"))
 
         alldvswitches_json["seaf.ta.components.network"][switch_id] = {
             'id': json_switch.get("_vimid"),
@@ -164,7 +160,7 @@ def export_dvswitches(dvss, dc, config):
                 'type': 'dvswitch',
                 'reverse_type': 'VMwareOnprem',
                 'original_id': json_switch.get("_vimref"),
-                'vdc': dc_id,
+                'vdc': get_dc_id(prefix, "vdc", dc),
                 'vdc_title': dc.get("name")
             },
             'dc': location
@@ -181,8 +177,7 @@ def export_dvpgroups(dvpgs, dc, config):
     alldvportgroups_json = {"seaf.ta.reverse.vmwareonprem.dvportgroups": {}}
     for json_pg in dvpgs:
 
-        id = prefix + "dvportgroups." + json_pg.get("_vimid")
-        dc_id = prefix + "vdc." + dc.get("_moId")
+        id = get_id(prefix, "dvportgroup", json_pg.get("_vimid"))
 
         alldvportgroups_json["seaf.ta.reverse.vmwareonprem.dvportgroups"][id] = {
             'id': json_pg.get("_vimid"),
@@ -192,7 +187,7 @@ def export_dvpgroups(dvpgs, dc, config):
             'subnets': '',
             'dvswitch': prefix + "dvswitch." + json_pg.get("config").get("distributedVirtualSwitch").split(":")[-1],
             'vlan': json_pg["vlan_id"],
-            'vdc': dc_id,
+            'vdc': get_dc_id(prefix, "vdc", dc),
             'vdc_title': dc.get("name")
         }
 
@@ -212,7 +207,7 @@ def export_hosts(hosts, dc, config):
         # REFACTORING NEEDED !!!!! (split funtion)
         def get_hostnetwork(host_config):
 
-            # Physical Nics
+            # (Function) Physical Nics
             host_pnics = []
             for pnic in host_config.get("network", "").get("pnic", ""):
                 pnic_info = dict()
@@ -227,7 +222,7 @@ def export_hosts(hosts, dc, config):
                 )
                 host_pnics.append(pnic_info)
 
-            # Virtual Nics
+            # (Function) Virtual Nics
             host_vnics = []
             for vnic in host_config.get("network", "").get("vnic", ""):
                 vnic_info = dict()
@@ -247,7 +242,7 @@ def export_hosts(hosts, dc, config):
                 )
                 host_vnics.append(vnic_info)
 
-            # Virtual Switches
+            # (Function) Virtual Switches
             host_vswitches = []
             for vswitch in host_config.get("network", "").get("vswitch", ""):
                 vswitch_info = dict()
@@ -269,14 +264,13 @@ def export_hosts(hosts, dc, config):
                 )
                 host_vswitches.append(vswitch_info)
 
-            # Port Groups
+            # (Function) Port Groups
             host_portgroups = []
             for portgroup in host_config.get("network", "").get("portgroup", ""):
 
                 portgroup_info = dict()
                 nicteamingplc = ""
                 if 'nicTeaming' in portgroup.get("spec", "").get("policy", ""):
-                    # print(portgroup.get("spec","").get("policy",""))
                     if portgroup.get("spec", "").get("policy", "").get("nicTeaming", "") != None:
                         nicteamingplc = portgroup.get("spec", "").get(
                             "policy", "").get("nicTeaming", "").get("policy", "")
@@ -314,8 +308,7 @@ def export_hosts(hosts, dc, config):
 
         json_config = vchost.get("config")
 
-        id = prefix + 'hosts.' + vchost.get("_moId")
-        dc_id = prefix + 'vdcs.' + dc.get("_moId")
+        id = get_id(prefix, "hosts", vchost.get("_moId"))
 
         allhosts_json["seaf.ta.reverse.vmwareonprem.hosts"][id] = {
             'id': vchost.get("_moId"),
@@ -329,12 +322,20 @@ def export_hosts(hosts, dc, config):
                 "fullname": json_config.get("product", "").get("fullname", "")
             },
             'network': get_hostnetwork(json_config),
-            'vdc': dc_id,
+            'vdc': get_dc_id(prefix, "vdcs", dc),
             'vdc_title': dc.get("name"),
             'dc': location
         }
 
     save(allhosts_json, exportpath, get_file_name("hosts", dc))
+
+
+def get_id(prefix, name, id):
+    return prefix + name + "." + id
+
+
+def get_dc_id(prefix, name, dc):
+    return prefix + name + "." + dc.get("_moId")
 
 
 def get_file_name(title, dc):
