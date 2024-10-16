@@ -91,7 +91,7 @@ def vmware_dag():
                 json_host = vcenter.get_host_json(host)
                 hosts.append(json_host)
             json_dc = vcenter.get_dc_json(dc)
-            functions.export_dvpgroups(hosts, json_dc, config)
+            functions.export_hosts(hosts, json_dc, config)
 
     @task
     def push():

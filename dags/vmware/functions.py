@@ -199,7 +199,7 @@ def export_dvpgroups(dvpgs, dc, config):
     save(alldvportgroups_json, exportpath, get_file_name("dvportgroups", dc))
 
 
-def get_hosts(hosts, dc, config):
+def export_hosts(hosts, dc, config):
 
     prefix = config["prefix"]
     location = config["location"]
