@@ -7,3 +7,4 @@ RUN apt update
 RUN apt install git -y
 COPY git_push.sh /scripts/git_push.sh
 RUN chmod +x /scripts/git_push.sh
+RUN apt install nano -y
