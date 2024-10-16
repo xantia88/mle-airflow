@@ -1,6 +1,6 @@
 import datetime
-
 from airflow.models import Variable
+from airflow.operators.bash import BashOperator
 from airflow.decorators import dag, task
 from vmware import functions, vcenter
 
@@ -93,9 +93,10 @@ def vmware_dag():
             json_dc = vcenter.get_dc_json(dc)
             functions.export_hosts(hosts, json_dc, config)
 
-    @task
-    def push():
-        pass
+    push = BashOperator(
+        task_id="push",
+        bash_command="/scripts/git_push.sh ",
+    )
 
     dcs = datacenters()
     vms = vms()
@@ -104,7 +105,6 @@ def vmware_dag():
     dvswitches = dvswitches()
     dvpgroups = dvpgroups()
     hosts = hosts()
-    push = push()
 
     dcs >> [vms, vapps, networks,
             dvswitches, dvpgroups, hosts] >> push
