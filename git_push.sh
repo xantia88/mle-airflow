@@ -1,2 +1,6 @@
 #!/bin/bash
-echo "this is test shell script"
+echo "listing files in " $1
+cd $1
+ls -a
+
+

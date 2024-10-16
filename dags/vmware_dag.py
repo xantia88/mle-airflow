@@ -93,9 +93,10 @@ def vmware_dag():
             json_dc = vcenter.get_dc_json(dc)
             functions.export_hosts(hosts, json_dc, config)
 
+    config = get_config()
     push = BashOperator(
         task_id="push",
-        bash_command="/scripts/git_push.sh ",
+        bash_command="/scripts/git_push.sh {} ".format(config.get("output")),
     )
 
     dcs = datacenters()
