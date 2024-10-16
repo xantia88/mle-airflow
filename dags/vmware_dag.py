@@ -18,7 +18,8 @@ def vmware_dag():
         return {
             "prefix": Variable.get("prefix", default_var=""),
             "location": Variable.get("location", default_var=""),
-            "output": Variable.get("output")
+            "output": Variable.get("output", default_var="/var/lib/airflow/output"),
+            "git_push": Variable.get("gitpush", default_var="/scripts/git_push.sh")
         }
 
     @task
@@ -96,7 +97,8 @@ def vmware_dag():
     config = get_config()
     push = BashOperator(
         task_id="push",
-        bash_command="/scripts/git_push.sh {} ".format(config.get("output")),
+        bash_command="{} {} ".format(
+            config.get("git_push"), config.get("output")),
     )
 
     dcs = datacenters()
