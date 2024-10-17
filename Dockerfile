@@ -5,6 +5,6 @@ RUN pip install -r ./tmp/requirements.txt
 USER root 
 RUN apt update 
 RUN apt install git -y
-COPY git_push.sh /scripts/git_push.sh
-RUN chmod +x /scripts/git_push.sh
 RUN apt install nano -y
+#COPY scripts /scripts
+#RUN chmod +x /scripts/*.sh

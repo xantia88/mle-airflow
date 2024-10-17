@@ -1,5 +1,5 @@
 #!/bin/bash
-echo "listing files in " $1
+echo " xxx listing files in " $1
 cd $1
 ls -a
 #git add --all
