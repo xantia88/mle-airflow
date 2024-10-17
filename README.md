@@ -62,8 +62,8 @@ http://127.0.0.1:8080/
 
 ```
 mkdir output
-chmod u+w output
-chmod u+x scripts/*.sh
+chmod +w output
+chmod +x scripts/*.sh
 ```
 
 
