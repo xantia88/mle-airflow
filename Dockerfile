@@ -6,5 +6,3 @@ USER root
 RUN apt update 
 RUN apt install git -y
 RUN apt install nano -y
-#COPY scripts /scripts
-#RUN chmod +x /scripts/*.sh
