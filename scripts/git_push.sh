@@ -3,9 +3,9 @@
 NOW=$( date '+%F_%H:%M:%S' )
 
 # Здесь нужно задать настройки
-GIT_URL=
-GIT_PROJECT=
-GIT_USER=
+GIT_URL=github.com/xantia88
+GIT_PROJECT=draw.io
+GIT_USER=xantia88
 GIT_TOKEN=
 
 # Вывести информацию о папке, в которой лежат сформированные файлы
