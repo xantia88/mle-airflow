@@ -98,7 +98,7 @@ def vmware_dag():
     push = BashOperator(
         task_id="push",
         bash_command="{} {} ".format(
-            config.get("git_push"), config.get("output")),
+            config.get("git_push"), config.get("output"), "test"),
     )
 
     dcs = datacenters()
