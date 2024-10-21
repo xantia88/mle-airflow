@@ -6,7 +6,7 @@ NOW=$( date '+%F_%H:%M:%S' )
 GIT_URL=github.com/xantia88
 GIT_PROJECT=draw.io
 GIT_USER=xantia88
-GIT_TOKEN=
+GIT_TOKEN=xxx
 
 # Вывести информацию о папке, в которой лежат сформированные файлы
 ls -la $1
@@ -17,6 +17,7 @@ echo "git clone https://$GIT_USER:$GIT_TOKEN@$GIT_URL/$GIT_PROJECT.git"
 git clone https://$GIT_USER:$GIT_TOKEN@$GIT_URL/$GIT_PROJECT.git
 
 # Копируем сформированный файлы во временную папку
+echo $1
 cp $1/*.yaml $GIT_PROJECT
 
 # Отправляем файлы в репозиторий на сервер
