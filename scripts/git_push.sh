@@ -5,8 +5,8 @@ GIT_URL=
 GIT_USER=
 GIT_TOKEN=
 GIT_PROJECT=
-GIT_USER_EMAIL=
-GIT_USER_NAME=
+GIT_USER_EMAIL=""
+GIT_USER_NAME=""
 
 # Вывести информацию о папке, в которой лежат сформированные файлы
 echo "Output dir:"$1
