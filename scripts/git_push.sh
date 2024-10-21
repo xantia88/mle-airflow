@@ -23,7 +23,7 @@ cp $1/*.yaml $GIT_PROJECT
 cd $GIT_PROJECT
 git add --all
 git commit -m "airflow commit "$NOW
-git push origi
+git push origin
 cd -
 
 # Удаляем временную папку
