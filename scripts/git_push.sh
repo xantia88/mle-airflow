@@ -1,6 +1,9 @@
 #!/bin/bash
 
 NOW=$( date '+%F_%H:%M:%S' )
+
+SOURCE_DIR=$1
+
 GIT_URL=
 GIT_PROJECT=
 GIT_USER=
@@ -9,14 +12,14 @@ GIT_USER_EMAIL=''
 GIT_USER_NAME=''
 
 pwd
-ls -la $1
+ls -la $SOURCE_DIR
 
 rm -r --force --interactive=never $GIT_PROJECT
 
 echo "git clone https://$GIT_USER:$GIT_TOKEN@$GIT_URL/$GIT_PROJECT.git"
 git clone https://$GIT_USER:$GIT_TOKEN@$GIT_URL/$GIT_PROJECT.git ./$GIT_PROJECT
 
-cp -v $1/*.yaml ./$GIT_PROJECT
+cp -v $SOURCE_DIR/*.yaml ./$GIT_PROJECT
 
 cd ./$GIT_PROJECT
 git config user.email $GIT_USER_EMAIL

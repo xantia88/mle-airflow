@@ -1,0 +1,24 @@
+{
+    "git": {
+        "push_script": "/scripts/git_push.sh",
+        "output_dir": "/var/lib/airflow/output"
+    },
+    "vcenters": [
+        {
+            "vmuser": "",
+            "vmpassword": "",
+            "vmhost": "",
+            "prefix": "",
+            "location": "",
+            "output": "/var/lib/airflow/output/vc1"
+        },
+        {
+            "vmuser": "",
+            "vmpassword": "",
+            "vmhost": "",
+            "prefix": "",
+            "location": "",
+            "output": "/var/lib/airflow/output/vc2"
+        }
+    ]
+}

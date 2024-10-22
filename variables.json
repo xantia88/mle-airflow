@@ -1,9 +1,0 @@
-{
-    "vmuser": "xxx",
-    "vmpassword": "yyy",
-    "vmhost": "zzz",
-    "prefix": "",
-    "location": "",
-    "output": "/var/lib/airflow/output",
-    "gitpush": "/scripts/git_push.sh"
-}
