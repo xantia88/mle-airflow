@@ -16,14 +16,17 @@ def vmware_dag():
         return config
 
     def connect(config):
+        print("config", config)
         vm_host = config.get("vmhost")
         vm_user = config.get("vmuser")
         vm_password = config.get("vmpassword")
+        print("connect", vm_host, vm_user, vm_password)
         return vcenter.connect(vm_host, vm_user, vm_password)
 
     @task
     def datacenters():
         configs = get_config()
+        print("all_config", configs)
         for config in configs.get("vcenters"):
             content = connect(config)
             dcs = vcenter.get_dcs(content)
