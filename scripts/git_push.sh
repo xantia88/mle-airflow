@@ -10,6 +10,7 @@ GIT_USER=
 GIT_TOKEN=
 GIT_USER_EMAIL=''
 GIT_USER_NAME=''
+DH_RELOAD=
 
 pwd
 ls -la $SOURCE_DIR
@@ -31,3 +32,5 @@ git push origin
 cd ..
 
 rm -r --force --interactive=never $GIT_PROJECT
+
+curl -X 'PUT' '$DH_RELOAD' -H 'accept: application/json'
