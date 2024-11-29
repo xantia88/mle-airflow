@@ -5,16 +5,16 @@
     },
     "vcenters": [
         {
-            "vmuser": "aaa",
-            "vmpassword": "bbb",
+            "vmuser": "dc1_vmuser",
+            "vmpassword": "dc1_vmpassword",
             "vmhost": "ccc",
             "prefix": "",
             "location": "",
             "output": "/var/lib/airflow/output/vc1"
         },
         {
-            "vmuser": "eee",
-            "vmpassword": "fff",
+            "vmuser": "dc2_vmuser",
+            "vmpassword": "dc2_vmpassword",
             "vmhost": "jjj",
             "prefix": "",
             "location": "",

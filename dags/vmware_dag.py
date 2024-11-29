@@ -18,8 +18,9 @@ def vmware_dag():
     def connect(config):
         print("config", config)
         vm_host = config.get("vmhost")
-        vm_user = config.get("vmuser")
-        vm_password = config.get("vmpassword")
+        # get parameter from Airflow variables (Admin / Variables in UI)
+        vm_user = Variable.get(config.get("vmuser"))
+        vm_password = Variable.get(config.get("vmpassword"))
         print("connect", vm_host, vm_user, vm_password)
         return vcenter.connect(vm_host, vm_user, vm_password)
 
