@@ -20,5 +20,8 @@
             "location": "",
             "output": "/var/lib/airflow/output/vc2"
         }
-    ]
+    ],
+    "kubernetes": {
+        "output": "/var/lib/airflow/output/kubernetes"
+    }
 }
