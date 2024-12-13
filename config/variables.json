@@ -22,6 +22,6 @@
         }
     ],
     "kubernetes": {
-        "output": "../output"
+        "output": "/var/lib/airflow/output/kub"
     }
 }

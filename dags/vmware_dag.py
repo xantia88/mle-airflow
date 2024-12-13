@@ -4,6 +4,8 @@ from airflow.operators.bash import BashOperator
 from airflow.decorators import dag, task
 from vmware import functions, vcenter
 import json
+from os import listdir
+from os.path import isfile, join
 
 
 @dag(start_date=datetime.datetime(2024, 1, 1), schedule="@once")
@@ -104,6 +106,16 @@ def vmware_dag():
                 json_dc = vcenter.get_dc_json(dc)
                 functions.export_hosts(hosts, json_dc, config)
 
+    @task
+    def root():
+        configs = get_config()
+        for config in configs:
+            path = config["output"]
+            objects = {
+                "imports": [f for f in listdir(path) if isfile(join(path, f))]
+            }
+            functions.save(objects, path, "root")
+
     configs = get_config()
     git = configs.get("git")
     push = BashOperator(
@@ -119,9 +131,10 @@ def vmware_dag():
     dvswitches = dvswitches()
     dvpgroups = dvpgroups()
     hosts = hosts()
+    r = root()
 
     dcs >> [vms, vapps, networks,
-            dvswitches, dvpgroups, hosts] >> push
+            dvswitches, dvpgroups, hosts] >> r >> push
 
 
 vmware_dag()
