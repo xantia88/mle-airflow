@@ -23,5 +23,6 @@
     ],
     "kubernetes": {
         "output": "/var/lib/airflow/output/kub"
-    }
+    },
+    "gigachat": {}
 }

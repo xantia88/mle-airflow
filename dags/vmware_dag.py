@@ -109,11 +109,11 @@ def vmware_dag():
     @task
     def root():
         configs = get_config()
-        for config in configs.get("vcenters")
-        path = config["output"]
-        objects = {
-            "imports": [f for f in listdir(path) if isfile(join(path, f))]
-        }
+        for config in configs.get("vcenters"):
+            path = config["output"]
+            objects = {
+                "imports": [f for f in listdir(path) if isfile(join(path, f))]
+            }
         functions.save(objects, path, "root")
 
     configs = get_config()
