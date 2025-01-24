@@ -24,5 +24,10 @@
     "kubernetes": {
         "output": "/var/lib/airflow/output/kub"
     },
-    "gigachat": {}
+    "gigachat": {},
+    "vmwarecloud": {
+        "script_path": "",
+        "config_file": "configuration copy.conf",
+        "output": "/var/lib/airflow/output/vmcloud"
+    }
 }
