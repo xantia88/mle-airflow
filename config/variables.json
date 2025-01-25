@@ -29,5 +29,14 @@
         "script_path": "",
         "config_file": "configuration copy.conf",
         "output": "/var/lib/airflow/output/vmcloud"
+    },
+    "advanced": {
+        "cloudregion": "ru-moscow-1",
+        "cloudproject": "здесь должен быть идентификатор проекта/тенанта",
+        "credentials": "credentials.csv",
+        "company_domain": "berezka",
+        "dc": "идентификатор ЦОД/IaaS из сущности seaf.ta.services.dc",
+        "tenant": "",
+        "output": "/var/lib/airflow/output/advanced"
     }
 }

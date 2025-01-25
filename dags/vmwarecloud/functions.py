@@ -3,6 +3,7 @@ import json
 import re
 import math
 import configparser
+from vmwarecloud import cloudapi
 
 
 def export_orgs(config):
