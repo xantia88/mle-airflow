@@ -1258,15 +1258,6 @@ def init_config(script_path, config_file):
             except Exception as err:
                 print(err.strerror)
 
-    # get api init
-    try:
-        api_init = cloudapi.get_api_versions(site=site)
-    except Exception as err:
-        print(err.strerror)
-    else:
-        print(api_init["version"])
-        print(api_init["url"])
-
     return {
         "site": site,
         "tentant": tenant,
@@ -1274,7 +1265,7 @@ def init_config(script_path, config_file):
         "prefix": prefix,
         "exportpath": exportpath,
         "access_token": access_token,
-        "api_init": api_init
+        "api_init": cloudapi.get_api_versions(site=site)
     }
 
 
