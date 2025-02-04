@@ -36,7 +36,7 @@ def export_orgs(config):
     # Working with pages if there are more than one
     if r_json.get('pageCount', '') > 1:
         items = cloudapi.get_pages(r_json.get(
-            'pageCount', ''), query, api_init)
+            'pageCount', ''), query, api_init, access_token)
         for item in items:
             orgs.append(item)
 
@@ -189,7 +189,7 @@ def export_vdcs(config):
     # Working with pages if there are more than one
     if r_json.get('pageCount', '') > 1:
         items = cloudapi.get_pages(r_json.get(
-            'pageCount', ''), query, api_init)
+            'pageCount', ''), query, api_init, access_token)
         for item in items:
             vdcs.append(item)
 
@@ -266,7 +266,7 @@ def export_orgnetworks(config):
     # Working with pages if there are more than one
     if r_json.get('pageCount', '') > 1:
         items = cloudapi.get_pages(r_json.get(
-            'pageCount', ''), query, api_init)
+            'pageCount', ''), query, api_init, access_token)
         for item in items:
             orgnetworks.append(item)
 
@@ -424,7 +424,7 @@ def export_edgegw(config):
     # Working with pages if there are more than one
     if r_json.get('pageCount', '') > 1:
         items = cloudapi.get_pages(r_json.get(
-            'pageCount', ''), query, api_init)
+            'pageCount', ''), query, api_init, access_token)
         for item in items:
             egws.append(item)
 
@@ -453,7 +453,7 @@ def export_edgegw(config):
             # Working with pages if there are more than one
             if r_network.get('pageCount', '') > 1:
                 items = cloudapi.get_pages(r_network.get(
-                    'pageCount', ''), nquery, api_init)
+                    'pageCount', ''), nquery, api_init, access_token)
                 for item in items:
                     networks.append(item)
 
@@ -552,7 +552,7 @@ def export_edgegw(config):
                     # Working with pages if there are more than one
                     if r_ip.get('pageCount', '') > 1:
                         items = cloudapi.get_pages(
-                            r_ip.get('pageCount', ''), ipquery, api_init)
+                            r_ip.get('pageCount', ''), ipquery, api_init, access_token)
                         for item in items:
                             ipaddresses.append(item)
 
@@ -654,7 +654,7 @@ def export_vms(config):
     # Working with pages if there are more than one
     pagecount = math.ceil(vms_json.get('total') / vms_json.get('pageSize'))
     if pagecount > 1:
-        items = cloudapi.get_pages(pagecount, query, api_init)
+        items = cloudapi.get_pages(pagecount, query, api_init, access_token)
         for item in items:
             vms.append(item)
 
@@ -797,7 +797,7 @@ def export_vapps(config):
     # Working with pages if there are more than one
     pagecount = math.ceil(vapps_json.get('total') / vapps_json.get('pageSize'))
     if pagecount > 1:
-        items = cloudapi.get_pages(pagecount, query, api_init)
+        items = cloudapi.get_pages(pagecount, query, api_init, access_token)
         for item in items:
             vapps.append(item)
 
@@ -863,7 +863,7 @@ def export_vappnets(config):
     pagecount = math.ceil(vappnets_json.get('total') /
                           vappnets_json.get('pageSize'))
     if pagecount > 1:
-        items = cloudapi.get_pages(pagecount, query, api_init)
+        items = cloudapi.get_pages(pagecount, query, api_init, access_token)
         for item in items:
             vappnets.append(item)
 
@@ -988,7 +988,7 @@ def export_edgenat(config):
     # Working with pages if there are more than one
     pagecount = math.ceil(r_json.get('total') / r_json.get('pageSize'))
     if pagecount > 1:
-        items = cloudapi.get_pages(pagecount, query, api_init)
+        items = cloudapi.get_pages(pagecount, query, api_init, access_token)
         for item in items:
             egws.append(item)
 
@@ -1062,7 +1062,7 @@ def export_edgefw(config):
     # Working with pages if there are more than one
     pagecount = math.ceil(r_json.get('total') / r_json.get('pageSize'))
     if pagecount > 1:
-        items = cloudapi.get_pages(pagecount, query, api_init)
+        items = cloudapi.get_pages(pagecount, query, api_init, access_token)
         for item in items:
             egws.append(item)
 
