@@ -4,8 +4,6 @@ from airflow.operators.bash import BashOperator
 from airflow.decorators import dag, task
 from vmware import functions, vcenter
 import json
-from os import listdir
-from os.path import isfile, join
 
 
 @dag(start_date=datetime.datetime(2024, 1, 1), schedule="@once")
@@ -20,9 +18,8 @@ def vmware_dag():
     def connect(config):
         print("config", config)
         vm_host = config.get("vmhost")
-        # get parameter from Airflow variables (Admin / Variables in UI)
-        vm_user = Variable.get(config.get("vmuser"))
-        vm_password = Variable.get(config.get("vmpassword"))
+        vm_user = config.get("vmuser")
+        vm_password = config.get("vmpassword")
         print("connect", vm_host, vm_user, vm_password)
         return vcenter.connect(vm_host, vm_user, vm_password)
 
@@ -106,23 +103,27 @@ def vmware_dag():
                 json_dc = vcenter.get_dc_json(dc)
                 functions.export_hosts(hosts, json_dc, config)
 
+    #configs = get_config()
+    #git = configs.get("git")
+    #push = BashOperator(
+    #    task_id="push",
+    #    bash_command="{} {} ".format(
+    #        git.get("push_script"), git.get("output_dir"))
+    #)
     @task
-    def root():
+    def push():
         configs = get_config()
-        for config in configs.get("vcenters"):
-            path = config["output"]
-            objects = {
-                "imports": [f for f in listdir(path) if isfile(join(path, f))]
-            }
-        functions.save(objects, path, "root")
 
+    bash_cmd_2run = []
     configs = get_config()
-    git = configs.get("git")
-    push = BashOperator(
-        task_id="push",
-        bash_command="{} {} ".format(
-            git.get("push_script"), git.get("output_dir"))
-    )
+    for config in configs.get("vcenters"):
+       git_push_script = config["git_push_script"]
+       git_output_dir = config["git_output_dir"]
+       bash_2run = BashOperator(
+          task_id="git_push_" + config["vmhost"],
+          bash_command="{} {} ".format(git_push_script, git_output_dir)
+       )
+       bash_cmd_2run.append(bash_2run)
 
     dcs = datacenters()
     vms = vms()
@@ -131,10 +132,22 @@ def vmware_dag():
     dvswitches = dvswitches()
     dvpgroups = dvpgroups()
     hosts = hosts()
-    r = root()
+    push = push()
+    
+    dcs >> [vms, vapps, networks,
+            dvswitches, dvpgroups, hosts] >> push >> bash_cmd_2run
+
+
+    dcs = datacenters()
+    vms = vms()
+    vapps = vapps()
+    networks = networks()
+    dvswitches = dvswitches()
+    dvpgroups = dvpgroups()
+    hosts = hosts()
 
     dcs >> [vms, vapps, networks,
-            dvswitches, dvpgroups, hosts] >> r >> push
+            dvswitches, dvpgroups, hosts] >> push
 
 
 vmware_dag()
