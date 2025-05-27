@@ -25,5 +25,21 @@
             "git_output_dir": "/var/lib/airflow/output"
         }
             ],
+    "evolution": {
+        "connection": {
+            "access_key": "",
+            "secret_key": "",
+            "iam": "auth.iam.sbercloud.ru",
+            "evoapi": "compute.api.cloud.ru",
+            "project": "",      
+            "org": ""
+        },
+        "params": {
+            "domain": "",
+            "root": "",
+            "exportpath": "",
+            "DC":""
+        }
+    },
     "gigachat": {}
 }
